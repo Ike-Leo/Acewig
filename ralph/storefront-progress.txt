@@ -1,0 +1,170 @@
+# Ace Wig Storefront Progress Log
+Started: 2026-01-20T11:40:00Z
+
+## Codebase Patterns
+- API service layer in `src/services/api.ts` with typed endpoints
+- React hooks for API calls in `src/services/hooks.ts`
+- Cart state managed in `src/contexts/CartContext.tsx`
+- App state (modals, toasts) managed in `src/contexts/AppContext.tsx`
+- Tailwind v4 with @theme directive in `index.css`
+- Dark luxury aesthetic: gold (#E6C075), obsidian (#0F0A06), cream surfaces
+
+---
+
+## Phase 1: Core Components & State Management
+
+### US-001: Product Types & Extended API Types
+**Status:** ✅ COMPLETE
+**File:** types.ts
+**Completed:** 2026-01-20T11:45:00Z
+
+### US-002: Cart Drawer Component
+**Status:** ✅ COMPLETE
+**File:** src/components/CartDrawer.tsx
+**Completed:** 2026-01-20T11:52:00Z
+
+### US-003: Product Quick View Modal
+**Status:** ✅ COMPLETE
+**File:** src/components/ProductQuickView.tsx
+**Completed:** 2026-01-20T11:58:00Z
+
+### US-004: Variant Selector Component
+**Status:** ✅ COMPLETE
+**File:** src/components/VariantSelector.tsx
+**Completed:** 2026-01-20T11:50:00Z
+
+### US-005: Quantity Picker Component
+**Status:** ✅ COMPLETE
+**File:** src/components/QuantityPicker.tsx
+**Completed:** 2026-01-20T11:48:00Z
+
+---
+
+## Phase 2: Shopping Experience
+
+### US-006: Search Bar with Instant Results
+**Status:** ✅ COMPLETE
+**File:** src/components/SearchBar.tsx
+**Completed:** 2026-01-20T12:00:00Z
+
+### US-007: Category Navigation Menu
+**Status:** ✅ COMPLETE
+**File:** src/components/CategoryNav.tsx
+**Completed:** 2026-01-20T12:15:00Z
+
+### US-008: Shop Section with Filters
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:20:00Z
+
+### US-009: Product Card Enhancement
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:05:00Z
+
+---
+
+## Phase 3: Cart & Checkout Flow
+
+### US-010: Checkout Modal
+**Status:** ✅ COMPLETE
+**File:** src/components/CheckoutModal.tsx
+**Completed:** 2026-01-20T11:55:00Z
+
+### US-011: Order Confirmation Component
+**Status:** ✅ COMPLETE
+**File:** src/components/OrderConfirmation.tsx
+**Completed:** 2026-01-20T11:56:00Z
+
+### US-012: Checkout API Integration
+**Status:** ✅ COMPLETE
+**Notes:** Integrated into CheckoutModal
+
+---
+
+## Phase 4: Order Management & Polish
+
+### US-013: Order Status Lookup
+**Status:** ✅ COMPLETE
+**File:** src/components/OrderTracking.tsx
+**Completed:** 2026-01-20T11:57:00Z
+
+### US-014: Global App State & Modal Management
+**Status:** ✅ COMPLETE
+**File:** src/contexts/AppContext.tsx
+**Completed:** 2026-01-20T11:47:00Z
+
+### US-015: Toast Notifications
+**Status:** ✅ COMPLETE
+**File:** src/components/Toast.tsx
+**Completed:** 2026-01-20T11:51:00Z
+
+### US-016: Loading Skeletons
+**Status:** ✅ COMPLETE
+**File:** src/components/Skeleton.tsx
+**Completed:** 2026-01-20T12:15:00Z
+
+### US-017: App Integration & Final Polish
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:06:00Z
+
+---
+
+## Phase 5: Enhancements & Refinements
+
+### US-018: Related Products in Quick View
+**Status:** ✅ COMPLETE
+**File:** src/components/ProductQuickView.tsx
+**Completed:** 2026-01-20T13:00:00Z
+
+- Implemented 3-column desktop layout (Image, Details, Related)
+- Implemented Mobile horizontal scroll for related items
+- Integrated `useProducts` for fetching related items
+- Enforced clickable navigation to refresh modal with new product (Ralph Process)
+
+### US-019: Mobile SideNav Search Functionality
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:50:00Z
+
+- Replaced static input with `SearchBar` component
+
+### US-020: Infinite Scroll in Shop
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:55:00Z
+
+- Added `IntersectionObserver` to trigger `loadMore`
+- Replaced manual button with loading indicator
+
+### US-021: Cart Increase-Only Logic
+**Status:** ✅ COMPLETE
+**File:** src/components/CartDrawer.tsx
+**Completed:** 2026-01-20T12:48:00Z
+
+- Disabled decrease button in `QuantityPicker` inside Cart
+
+### US-022: Product Price Tag Styling
+**Status:** ✅ COMPLETE
+**File:** App.tsx
+**Completed:** 2026-01-20T12:52:00Z
+
+- Added backdrop blur pill styling to price tags
+- Added Compare-At price display
+
+---
+
+## Verification Results
+
+### Browser Test 1: 2026-01-20T12:05:00Z
+**Result:** ✅ ALL CORE FLOWS PASSED
+
+### Browser Test 2: 2026-01-20T12:40:00Z
+**Result:** ✅ FILTERS PASSED
+
+### Summary
+**Completed:** 22/22 Stories (100%)
+
+**Phase 1-4:** 100% COMPLETE
+**Phase 5:** 5/5 ✅ COMPLETE

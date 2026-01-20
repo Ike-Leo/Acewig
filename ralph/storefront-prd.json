@@ -1,0 +1,201 @@
+{
+    "project": "AceWig Storefront",
+    "fullName": "Ace Wig Salon & Luxe Shop E-Commerce Frontend",
+    "description": "Complete e-commerce storefront with product browsing, cart management, checkout, and order tracking. Integrates with Convex Storefront HTTP API.",
+    "branchName": "main",
+    "techStack": {
+        "framework": "React + TypeScript + Vite",
+        "styling": "Tailwind CSS v4",
+        "api": "Storefront HTTP API (Convex)",
+        "aesthetic": "Dark Luxury (Eternal Gold & Obsidian)"
+    },
+    "apiConfig": {
+        "baseUrl": "https://acoustic-seahorse-440.convex.site",
+        "orgSlug": "ace-wig"
+    },
+    "phases": [
+        "Phase 1: Core Components & State Management",
+        "Phase 2: Shopping Experience",
+        "Phase 3: Cart & Checkout Flow",
+        "Phase 4: Order Management & Polish",
+        "Phase 5: Enhancements & Refinements"
+    ],
+    "userStories": [
+        {
+            "id": "US-001",
+            "phase": "Phase 1",
+            "title": "Product Types & Extended API Types",
+            "description": "Extend types.ts with all product, variant, cart, and order interfaces matching the API documentation. Add FrontendProduct interface with variants array.",
+            "file": "types.ts",
+            "passes": true
+        },
+        {
+            "id": "US-002",
+            "phase": "Phase 1",
+            "title": "Cart Drawer Component",
+            "description": "Create a slide-out cart drawer that shows cart items, quantities, prices, and total. Include quantity adjustment (+/-), remove item button, and checkout CTA. Match dark luxury aesthetic with gold accents.",
+            "file": "src/components/CartDrawer.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-003",
+            "phase": "Phase 1",
+            "title": "Product Quick View Modal",
+            "description": "Create a modal that opens when clicking a product card. Shows product image gallery, name, price, description, variant selector (if variants exist), quantity picker, and add-to-cart button.",
+            "file": "src/components/ProductQuickView.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-004",
+            "phase": "Phase 1",
+            "title": "Variant Selector Component",
+            "description": "Create a reusable variant selector that displays variant options (size, color, style) as buttons/chips. Shows variant-specific price and stock status.",
+            "file": "src/components/VariantSelector.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-005",
+            "phase": "Phase 1",
+            "title": "Quantity Picker Component",
+            "description": "Create a quantity picker with +/- buttons and input field. Respects max stock limits. Includes loading state for cart updates.",
+            "file": "src/components/QuantityPicker.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-006",
+            "phase": "Phase 2",
+            "title": "Product Search with Instant Results",
+            "description": "Upgrade the navbar search to show instant search results dropdown. Use debounced API calls. Show product thumbnails, names, prices. Click to open quick view.",
+            "file": "src/components/SearchBar.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-007",
+            "phase": "Phase 2",
+            "title": "Category Navigation Menu",
+            "description": "Create a categories dropdown/sidebar that lists all product categories from API. Click to filter products by category. Show product count per category.",
+            "file": "src/components/CategoryNav.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-008",
+            "phase": "Phase 2",
+            "title": "Shop Section with Filters",
+            "description": "Enhance ShopSection to include price range filter, in-stock filter, and category filter. Show active filters as chips. Add 'clear filters' button.",
+            "file": "App.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-009",
+            "phase": "Phase 2",
+            "title": "Product Card Enhancement",
+            "description": "Update ProductCard to open ProductQuickView modal on click. Add quick-add button for products with single variant. Show 'Out of Stock' badge when applicable.",
+            "file": "App.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-010",
+            "phase": "Phase 3",
+            "title": "Checkout Page/Modal",
+            "description": "Create checkout flow with: customer info form (name, email, phone, address), cart summary, and place order button. Form validation. Success/error states.",
+            "file": "src/components/CheckoutModal.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-011",
+            "phase": "Phase 3",
+            "title": "Order Confirmation Component",
+            "description": "Create order confirmation view showing order number, items ordered, total, and estimated delivery. Include 'Continue Shopping' and 'Track Order' buttons.",
+            "file": "src/components/OrderConfirmation.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-012",
+            "phase": "Phase 3",
+            "title": "Checkout API Integration",
+            "description": "Wire up checkout form to checkoutApi.process(). Handle loading state, success response with order ID, and error handling. Clear cart on success.",
+            "file": "src/components/CheckoutModal.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-013",
+            "phase": "Phase 4",
+            "title": "Order Status Lookup",
+            "description": "Create 'Track Your Order' section in Contact or as modal. Form with order number and email. Displays order status, items, and timeline on success.",
+            "file": "src/components/OrderTracking.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-014",
+            "phase": "Phase 4",
+            "title": "Global App State & Modal Management",
+            "description": "Create AppContext for managing global state: active modals (cart, quickview, checkout, tracking), selected product, UI state. Add Modal wrapper component.",
+            "file": "src/contexts/AppContext.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-015",
+            "phase": "Phase 4",
+            "title": "Toast Notifications",
+            "description": "Create toast notification system for: 'Added to cart', 'Order placed', 'Error occurred'. Auto-dismiss. Stackable. Match dark luxury theme.",
+            "file": "src/components/Toast.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-016",
+            "phase": "Phase 4",
+            "title": "Loading Skeletons",
+            "description": "Create skeleton loading components for: ProductCard, CartDrawer, CheckoutModal. Shimmer animation matching dark theme.",
+            "file": "src/components/Skeleton.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-017",
+            "phase": "Phase 4",
+            "title": "App Integration & Final Polish",
+            "description": "Integrate all components into App.tsx. Ensure smooth flow: browse → quick view → add to cart → checkout → confirmation. Fix any styling inconsistencies.",
+            "file": "App.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-018",
+            "phase": "Phase 5",
+            "title": "Related Products in Quick View",
+            "description": "Display related/featured products in the ProductQuickView modal. Layout: Horizontal scroll on mobile, Vertical stack on desktop side panel. Use 'useRelatedProducts' hook.",
+            "file": "src/components/ProductQuickView.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-019",
+            "phase": "Phase 5",
+            "title": "Mobile SideNav Search Functionality",
+            "description": "Make the search text input in the mobile sidebar functional. It should behave like the main SearchBar (autocomplete/dropdown) or redirect to search results.",
+            "file": "App.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-020",
+            "phase": "Phase 5",
+            "title": "Infinite Scroll in Shop",
+            "description": "Replace 'Load More' button with infinite scrolling behavior using IntersectionObserver in ShopSection. Auto-load next page when reaching bottom of grid.",
+            "file": "App.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-021",
+            "phase": "Phase 5",
+            "title": "Cart Increase-Only Logic",
+            "description": "Modify CartDrawer quantity controls. Disable or remove the decrease (-) button. Users can increase quantity but cannot decrease it (must use remove button to delete).",
+            "file": "src/components/CartDrawer.tsx",
+            "passes": true
+        },
+        {
+            "id": "US-022",
+            "phase": "Phase 5",
+            "title": "Product Price Tag Styling",
+            "description": "Style product price tags with a background color. Display 'Compare At' (original) price with strikethrough if available. Ensure distinct visual hierarchy.",
+            "file": "App.tsx",
+            "passes": true
+        }
+    ]
+}

@@ -1,0 +1,388 @@
+## Codebase Patterns
+- Convex schema exports both validator types (v.union) and TypeScript types
+- Auth functions use getCurrentUser, requireAuth, requireActiveUser pattern
+- RBAC uses isSuperior, canPerformAction, and scope containment checks
+- All Convex functions validate auth and scope server-side
+
+---
+
+Phase 0: Initialization
+- [x] Setup Expo Project
+- [x] Configure Convex  
+- [x] Define CIOP Schema
+
+---
+
+## 2026-01-13T01:32:00Z - Phase 1: Foundation Modules
+
+### Module 1.1: Database Schema
+**File**: `chapp3/convex/schema.ts`
+**Status**: ✅ COMPLETE
+
+- Created complete Convex schema with all 10 tables:
+  - users, branches, departments, groups, tasks
+  - activityEvents, rewardMilestones
+  - conversations, conversationMembers, messages
+- Defined 8 enums as validators + TypeScript types:
+  - Role, UserStatus, TaskStatus, ScopeLevel
+  - EventType, MilestoneType, ConversationType, ConversationRole
+- Added proper indexes for efficient querying
+- Exported both validator types and TypeScript types for reuse
+
+### Module 1.2: Authentication
+**File**: `chapp3/convex/auth.ts`
+**Status**: ✅ COMPLETE
+
+- Implemented auth helpers:
+  - getIdentity() - get current auth identity
+  - getCurrentUser() - get user document from DB
+  - requireAuth() - require authenticated user (throws if not)
+  - requireActiveUser() - require active user (throws if inactive)
+- Created queries:
+  - me - get current user profile
+  - getUserProfile - get user by ID (scope-filtered)
+  - validateUserAccess - check user access details
+  - isUserActive - check if current user is active
+- Created mutations:
+  - createOrUpdateUser - OAuth callback handler
+
+### Module 1.3: RBAC (Role-Based Access Control)
+**File**: `chapp3/convex/rbac.ts`
+**Status**: ✅ COMPLETE
+
+- Implemented role hierarchy: senior_pastor → branch_pastor → pastor → deacon → department_head → group_leader → worker
+- Created scope containment logic for hierarchical access control
+- Implemented superiority checking (role + scope validation)
+- Created permission action checking for 8 action types
+- Created queries:
+  - getRoleHierarchy - list all roles with capabilities
+  - checkSuperior - check if current user is superior to another
+  - getValidSuperiors - get valid approvers for a user
+  - getValidAssignees - get users current user can assign to
+  - getValidApprovers - get valid approvers for an assignee
+  - getMyPermissions - get current user's permissions
+- Created helper functions for validation in mutations
+
+**Learnings for future iterations:**
+- The _generated types need `npx convex dev` to regenerate after schema changes
+- Role hierarchy uses array index (lower = higher authority)
+- Scope containment: senior_pastor has global; others need matching branch + optionally department/group
+- Workers cannot assign tasks; only pastor and above can approve
+
+---
+
+## 2026-01-13T01:45:00Z - Phase 2: Core Backend Modules
+
+### Module 2: User Management Backend
+**File**: `chapp3/convex/users.ts`
+**Status**: ✅ COMPLETE
+
+- Implemented user CRUD operations:
+  - createUser - with scope/role validation, email uniqueness
+  - updateUser - with permission checking
+  - deactivateUser - with superior validation
+- Created queries:
+  - listUsers - scope-filtered user list
+  - getUserDetails - full user info with related entities
+  - getActiveUsers - for pickers
+  - getSubordinates - users current user supervises
+  - searchUsers - by name or email
+
+### Module 3: Organizational Structure Backend
+**File**: `chapp3/convex/structure.ts`
+**Status**: ✅ COMPLETE
+
+- Branch mutations: createBranch (senior_pastor only)
+- Department mutations: createDepartment, assignDepartmentHead
+- Group mutations: createGroup, assignGroupLeader
+- Queries: listBranches, listDepartments, listGroups
+- Tree views: getBranchTree, getStructureSummary
+- Automatic group conversation creation
+
+### Module 4: Task Management Backend
+**File**: `chapp3/convex/tasks.ts`
+**Status**: ✅ COMPLETE
+
+- Task mutations:
+  - createTask - with scope derivation, approver validation
+  - startTask - assigned → in_progress (assignee only)
+  - completeTask - in_progress → done (assignee only)
+  - approveTask - done → approved (approver only, locks conversation)
+  - updateTask - with immutability check for approved tasks
+- Task queries:
+  - getTask - with related user data
+  - listMyTasks - assignee's tasks
+  - listTasksInScope - scope-filtered list
+  - listTasksNeedingApproval - done tasks for current approver
+  - getTaskActivity - activity timeline
+  - getTaskConversation - task thread
+
+### Module 5: Activity & Rewards Backend
+**File**: `chapp3/convex/activity.ts`
+**Status**: ✅ COMPLETE
+
+- Point values: started=1, completed=2, approved=3
+- Milestone checking for 10 tasks completed/approved
+- Queries:
+  - getRecentActivity - scope-filtered activity feed
+  - getMyActivity - personal activity
+  - getActivityForTask - task timeline
+  - getWeeklyPoints - this week's points
+  - getMilestones - user's milestones
+  - getRewardsSummary - combined stats
+
+### Module 6: Chat Backend
+**Files**: `chapp3/convex/conversations.ts`, `chapp3/convex/messages.ts`
+**Status**: ✅ COMPLETE
+
+- Conversation mutations:
+  - createDirectConversation - with scope validation
+  - addConversationMember, removeConversationMember
+  - lockConversation (for approved tasks)
+- Conversation queries:
+  - listMyConversations - with last message, titles
+  - getGroupConversation, getDepartmentConversation
+  - getDirectConversation, getTaskConversation
+  - canUserPostInConversation - access check
+- Message mutations:
+  - sendMessage - with 3000 char limit, lock checking
+  - hideMessage - soft-delete for sender only
+- Message queries:
+  - getMessages - paginated, enriched with sender
+  - getMessage - single message
+  - getUnreadCounts - simplified unread tracking
+
+**Learnings for future iterations:**
+- Task scope is derived from assignee and never changes
+- Task conversations auto-lock on approval
+- Senior pastor can read all chats but may not post outside scope
+- Messages are immutable; only hiddenForSender soft-delete
+
+---
+
+## 2026-01-13T02:00:00Z - Phase 3: Core Frontend Modules
+
+### Constants & Design System
+**File**: `chapp3/constants/design-system.ts`
+**Status**: ✅ COMPLETE
+
+- Color palette matching PRD specifications
+- Task status colors (assigned, in_progress, done, approved)
+- Role display mappings with labels and colors
+- Typography scale, spacing, border radius, shadows
+
+### UI Components Library
+**Directory**: `chapp3/components/ui/`
+**Status**: ✅ COMPLETE
+
+- Button (primary, secondary, success, destructive, outline, ghost variants)
+- TextInput (with label, error state, focus ring)
+- Card (with CardHeader, CardContent, CardFooter)
+- Badge, StatusBadge, RoleBadge
+- Alert (success, warning, error, info)
+- Avatar (initials with deterministic colors)
+- EmptyState (with optional action)
+- LoadingSpinner, ScreenLoader
+
+### Providers & Hooks
+**Files**: 
+- `chapp3/providers/convex-provider.tsx`
+- `chapp3/hooks/use-auth.ts`
+- `chapp3/hooks/use-permissions.ts`
+**Status**: ✅ COMPLETE
+
+- ConvexClientProvider for Convex connection
+- useCurrentUser, useUserAccess, useIsUserActive hooks
+- usePermissions, useRoleHierarchy hooks
+
+### Login Screen
+**File**: `chapp3/app/login.tsx`
+**Status**: ✅ COMPLETE
+
+- Email/password form with validation
+- Error banner with PRD-specified copy
+- CIOP branding header
+- "Contact an administrator" footer
+
+### Profile Screen
+**File**: `chapp3/app/profile.tsx`
+**Status**: ✅ COMPLETE
+
+- User details (name, email, phone, role, status)
+- Inactive user banner
+- Scope information
+- Sign out functionality
+
+### Home Dashboard
+**File**: `chapp3/app/(tabs)/index.tsx`
+**Status**: ✅ COMPLETE
+
+- Welcome header with greeting
+- Quick stats (My Tasks, To Approve, Points)
+- My Tasks card with status badges
+- Awaiting My Approval card
+- Recent Activity feed
+- Pull-to-refresh
+
+### Tasks Screen
+**File**: `chapp3/app/tasks.tsx`
+**Status**: ✅ COMPLETE
+
+- Status filter chips
+- Task cards with title, description, due date
+- FAB for creating new tasks
+- Create Task modal (title, description)
+- Permission checking for assignment
+
+### Task Detail Screen
+**File**: `chapp3/app/tasks/[id].tsx`
+**Status**: ✅ COMPLETE
+
+- Task info with status and description
+- Action buttons: Start, Mark as Done, Approve
+- Details card (due date, created date)
+- People card (assignee, approver, creator)
+- Activity timeline
+- Link to task thread
+
+### Approvals Screen
+**File**: `chapp3/app/approvals.tsx`
+**Status**: ✅ COMPLETE
+
+- Header with count stat
+- Approval cards with assignee info
+- Quick review button
+- Empty state with PRD copy
+
+### App Layout
+**File**: `chapp3/app/_layout.tsx`
+**Status**: ✅ COMPLETE
+
+- ConvexClientProvider wrapper
+- All route definitions
+- Theme provider
+
+**Learnings for future iterations:**
+- Use @/ alias for imports from project root
+- StatusBadge accepts 'assigned' | 'in_progress' | 'done' | 'approved'
+- Card uses CardHeader, CardContent, CardFooter sub-components
+- PRD specifies exact copy for empty states and error messages
+
+---
+
+## Next Steps (Remaining Work)
+
+### Phase 4: Secondary Features
+- [ ] Structure screen (Branches/Departments/Groups tabs)
+- [ ] People screen (User list with create modal)
+- [ ] Chats list screen
+- [ ] Chat detail screen with messaging
+- [ ] Rewards screen
+
+### Phase 5: Polish & Refinement
+- [ ] Additional UI components
+- [ ] Enhanced navigation
+- [ ] Error handling improvements
+- [ ] Testing
+
+---
+
+## 2026-01-13T02:05:00Z - Phase 4: Secondary Features
+
+### Structure Screen
+**File**: `chapp3/app/structure.tsx`
+**Status**: ✅ COMPLETE
+
+- Tab navigation (Branches, Departments, Groups)
+- List views with leader/head information
+- Create buttons with permission checking
+- Pull-to-refresh
+- Empty states with PRD copy
+
+### People Screen
+**File**: `chapp3/app/people.tsx`
+**Status**: ✅ COMPLETE
+
+- Search by name or email
+- User cards with avatar, name, email, role, status
+- FAB for adding users
+- Create user modal with validation
+- Permission-based access control
+
+### Chats List Screen
+**File**: `chapp3/app/chats.tsx`
+**Status**: ✅ COMPLETE
+
+- Conversation list with icons by type
+- Last message preview
+- Timestamp formatting
+- Locked indicator for approved task threads
+- Empty state
+
+### Chat Detail Screen
+**File**: `chapp3/app/chats/[id].tsx`
+**Status**: ✅ COMPLETE
+
+- Message bubbles (own vs others)
+- Avatar grouping for consecutive messages
+- Locked/read-only banner for approved tasks
+- Message composer with send button
+- Auto-scroll to bottom
+- Keyboard avoiding view
+
+### Rewards Screen
+**File**: `chapp3/app/rewards.tsx`
+**Status**: ✅ COMPLETE
+
+- Points summary (weekly/all-time)
+- Task statistics
+- Milestones list with achievement dates
+- Weekly activity breakdown
+- Points legend (how to earn)
+
+**Learnings:**
+- Chat bubbles use flexDirection: 'row-reverse' for own messages
+- Conversation types: direct, group, department, task
+- Points: started=1, completed=2, approved=3
+- Milestones: tasks_completed_10, tasks_approved_10
+
+---
+
+## Summary: Development Complete
+
+### ✅ All Core Features Implemented
+
+**Backend (8 modules)**
+- Schema, Auth, RBAC
+- Users, Structure, Tasks
+- Activity & Rewards, Chat
+
+**Frontend (11 screens)**
+- Login, Profile, Home Dashboard
+- Tasks, Task Detail, Approvals
+- Structure, People
+- Chats, Chat Detail, Rewards
+
+**UI Components (8 components)**
+- Button, TextInput, Card
+- Badge, Alert, Avatar
+- EmptyState, Loading
+
+### 🎯 Ready for Testing
+
+The CIOP platform now has:
+- Complete backend with Convex functions
+- Full frontend with React Native screens
+- Design system implementation
+- Role-based permissions
+- Real-time data with Convex subscriptions
+
+### 📝 Next Steps
+
+1. **Run Convex dev server**: `npx convex dev`
+2. **Run Expo dev server**: `npm run start`
+3. **Test the application** on device/simulator
+4. **Seed initial data** (senior pastor, branches, etc.)
+5. **Iterate based on testing feedback**
+
+---

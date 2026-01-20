@@ -1,0 +1,224 @@
+{
+  "project": "CIOP",
+  "fullName": "Church Internal Operations Platform",
+  "description": "Role-based ministry operations platform for tasks, structure, and communication.",
+  "branchName": "main",
+  "techStack": {
+    "framework": "React Native (Expo)",
+    "database": "Convex",
+    "auth": "Convex Auth",
+    "styling": "Tailwind CSS + shadcn/ui"
+  },
+  "roles": [
+    "senior_pastor",
+    "branch_pastor",
+    "pastor",
+    "deacon",
+    "department_head",
+    "group_leader",
+    "worker"
+  ],
+  "features": [
+    "Authentication (Context & Scope)",
+    "Organizational Structure (Branch -> Dept -> Group)",
+    "User Management (Invite & Assign Role/Scope)",
+    "Task Management (Assign -> Execute -> Approve)",
+    "Activity Feed (Audit & Encouragement)",
+    "Realtime Chat (Scoped Conversations & Task Threads)"
+  ],
+  "userStories": [
+    {
+      "id": "BACKEND-001",
+      "phase": "Phase 1",
+      "title": "Database Schema",
+      "description": "Create Convex schema with all 10 tables and indexes",
+      "file": "chapp3/convex/schema.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-002",
+      "phase": "Phase 1",
+      "title": "Authentication Module",
+      "description": "Implement auth helpers and user profile queries",
+      "file": "chapp3/convex/auth.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-003",
+      "phase": "Phase 1",
+      "title": "RBAC Module",
+      "description": "Implement role hierarchy and permission checking",
+      "file": "chapp3/convex/rbac.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-004",
+      "phase": "Phase 2",
+      "title": "User Management Backend",
+      "description": "Implement user CRUD with scope validation",
+      "file": "chapp3/convex/users.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-005",
+      "phase": "Phase 2",
+      "title": "Structure Backend",
+      "description": "Implement Branch/Department/Group management",
+      "file": "chapp3/convex/structure.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-006",
+      "phase": "Phase 2",
+      "title": "Task Management Backend",
+      "description": "Implement task lifecycle with state machine",
+      "file": "chapp3/convex/tasks.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-007",
+      "phase": "Phase 2",
+      "title": "Activity & Rewards Backend",
+      "description": "Implement activity logging and milestones",
+      "file": "chapp3/convex/activity.ts",
+      "passes": true
+    },
+    {
+      "id": "BACKEND-008",
+      "phase": "Phase 2",
+      "title": "Chat Backend",
+      "description": "Implement conversations and messaging",
+      "files": [
+        "chapp3/convex/conversations.ts",
+        "chapp3/convex/messages.ts"
+      ],
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-001",
+      "phase": "Phase 3",
+      "title": "Login Screen",
+      "description": "Create login screen with email/password authentication",
+      "file": "chapp3/app/login.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-002",
+      "phase": "Phase 3",
+      "title": "Profile Screen",
+      "description": "Create profile display with role and scope info",
+      "file": "chapp3/app/profile.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-003",
+      "phase": "Phase 3",
+      "title": "Home Dashboard",
+      "description": "Create home with My Tasks, Approvals, Activity cards",
+      "file": "chapp3/app/(tabs)/index.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-004",
+      "phase": "Phase 3",
+      "title": "Tasks List Screen",
+      "description": "Create tasks list with filters and create modal",
+      "file": "chapp3/app/tasks.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-005",
+      "phase": "Phase 3",
+      "title": "Task Detail Screen",
+      "description": "Create task detail view with status transitions",
+      "file": "chapp3/app/tasks/[id].tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-006",
+      "phase": "Phase 3",
+      "title": "Approvals Screen",
+      "description": "Create approvals queue for pending tasks",
+      "file": "chapp3/app/approvals.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-007",
+      "phase": "Phase 4",
+      "title": "Structure Screen",
+      "description": "Create org structure with tabs for Branch/Dept/Group",
+      "file": "chapp3/app/structure.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-008",
+      "phase": "Phase 4",
+      "title": "People Screen",
+      "description": "Create user list with search and create modal",
+      "file": "chapp3/app/people.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-009",
+      "phase": "Phase 4",
+      "title": "Chats List Screen",
+      "description": "Create conversations list with types",
+      "file": "chapp3/app/chats.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-010",
+      "phase": "Phase 4",
+      "title": "Chat Detail Screen",
+      "description": "Create message thread with composer",
+      "file": "chapp3/app/chats/[id].tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-011",
+      "phase": "Phase 4",
+      "title": "Rewards Screen",
+      "description": "Create rewards page with points and milestones",
+      "file": "chapp3/app/rewards.tsx",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-012",
+      "phase": "Phase 5",
+      "title": "UI Components",
+      "description": "Create shared UI components matching design system",
+      "file": "chapp3/components/ui/",
+      "passes": true
+    },
+    {
+      "id": "FRONTEND-013",
+      "phase": "Phase 5",
+      "title": "Hooks & Utilities",
+      "description": "Create custom hooks and utility functions",
+      "files": [
+        "chapp3/hooks/",
+        "chapp3/utils/"
+      ],
+      "passes": false
+    },
+    {
+      "id": "FRONTEND-014",
+      "phase": "Phase 5",
+      "title": "Error Handling",
+      "description": "Create error boundary and loading states",
+      "files": [
+        "chapp3/components/ErrorBoundary.tsx",
+        "chapp3/components/Loading.tsx"
+      ],
+      "passes": false
+    },
+    {
+      "id": "FRONTEND-015",
+      "phase": "Phase 5",
+      "title": "Navigation",
+      "description": "Configure tab navigation and routing",
+      "file": "chapp3/app/",
+      "passes": false
+    }
+  ]
+}
