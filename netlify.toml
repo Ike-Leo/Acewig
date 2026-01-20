@@ -1,10 +1,16 @@
 # Netlify configuration for Ace Wig & More
 
 [build]
+  # Base directory (root of the repo)
+  base = ""
   # Build command
-  command = "npm run build"
+  command = "npm install && npm run build"
   # Directory to publish (Vite outputs to dist)
   publish = "dist"
+
+# Environment variables for build
+[build.environment]
+  NODE_VERSION = "20"
 
 # Redirect all routes to index.html for SPA routing
 [[redirects]]
