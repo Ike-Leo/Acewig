@@ -8,6 +8,8 @@ import './index.css';
 
 import { Layout } from './src/components/Layout';
 
+import TrendingPage from './src/pages/TrendingPage';
+import WishlistPage from './src/pages/WishlistPage';
 import ContactPage from './src/pages/ContactPage';
 
 const rootElement = document.getElementById('root');
@@ -25,6 +27,8 @@ root.render(
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/trending" element={<TrendingPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

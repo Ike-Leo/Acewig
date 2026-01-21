@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { CartProvider } from '@/src/contexts/CartContext';
 import { AppProvider } from '@/src/contexts/AppContext';
+import { WishlistProvider } from '@/src/contexts/WishlistContext';
 import { CartDrawer } from './CartDrawer';
 import { ProductQuickView } from './ProductQuickView';
 import { CheckoutModal } from './CheckoutModal';
@@ -30,21 +31,23 @@ export const Layout = () => {
     return (
         <CartProvider>
             <AppProvider>
-                <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-background-void font-sans">
-                    <Navbar />
-                    <main>
-                        <Outlet />
-                    </main>
+                <WishlistProvider>
+                    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-background-void font-sans">
+                        <Navbar />
+                        <main>
+                            <Outlet />
+                        </main>
 
-                    {/* Global Modals */}
-                    <CartDrawer />
-                    <ProductQuickView />
-                    <CheckoutModal />
-                    <OrderConfirmation />
-                    <OrderTracking />
-                    {/* Toast Notifications */}
-                    <ToastContainer />
-                </div>
+                        {/* Global Modals */}
+                        <CartDrawer />
+                        <ProductQuickView />
+                        <CheckoutModal />
+                        <OrderConfirmation />
+                        <OrderTracking />
+                        {/* Toast Notifications */}
+                        <ToastContainer />
+                    </div>
+                </WishlistProvider>
             </AppProvider>
         </CartProvider>
     );

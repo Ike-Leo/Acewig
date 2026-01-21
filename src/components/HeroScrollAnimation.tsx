@@ -60,13 +60,13 @@ const HeroScrollAnimation: React.FC<HeroScrollAnimationProps> = ({ children }) =
         const targetWidth = targetHeight * imgRatio;
 
         // X Position: push to the right
-        // Mobile: centered + 10% shift to right (was 5%)
+        // Mobile: centered + 30% shift to right (was 30% + 20% more = 50%)
         // Tablet: 15% from left
         // Desktop: 15% from left
         let drawX;
         if (isMobile) {
-            // Center the image but shift right by 30% of screen width (was 20%)
-            drawX = (width - targetWidth) / 2 + (width * 0.30);
+            // Center the image but shift right by 50% of screen width (was 30%)
+            drawX = (width - targetWidth) / 2 + (width * 0.50);
         } else if (isTablet) {
             drawX = width * 0.15;
         } else {
@@ -138,7 +138,8 @@ const HeroScrollAnimation: React.FC<HeroScrollAnimationProps> = ({ children }) =
 
     // Handle scroll to update frame
     useEffect(() => {
-        if (isLoading) return;
+        // if (isLoading) return; // Allow drawing even if still loading batches? No, better wait for refined logic or check for image existence.
+        // Actually, for simplicity, I'll keep default behavior but just not BLOCK the UI.
 
         const handleScroll = () => {
             const container = containerRef.current;
@@ -196,26 +197,16 @@ const HeroScrollAnimation: React.FC<HeroScrollAnimationProps> = ({ children }) =
                 cancelAnimationFrame(rafRef.current);
             }
         };
-    }, [isLoading, drawFrame]);
+    }, [drawFrame]); // Removed isLoading dependency to allow immediate interaction
 
     return (
         <>
-            {/* Loading State */}
-            {isLoading && (
-                <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-50">
-                    <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
-                    <span className="text-primary font-serif text-3xl mb-2">{loadProgress}%</span>
-                    <span className="text-foreground-dim font-sans text-sm uppercase tracking-widest">Loading Experience</span>
-                </div>
-            )}
-
             {/* FIXED Canvas - Stays in place, content scrolls over it */}
             <canvas
                 ref={canvasRef}
                 className="fixed top-0 left-0 w-screen h-screen"
                 style={{
-                    opacity: isLoading ? 0 : 1,
-                    transition: 'opacity 0.5s ease-out',
+                    opacity: 1, // Always visible
                     zIndex: 0, // Behind everything
                 }}
             />
@@ -235,8 +226,7 @@ const HeroScrollAnimation: React.FC<HeroScrollAnimationProps> = ({ children }) =
             <div
                 className="fixed top-0 left-0 w-screen h-screen"
                 style={{
-                    opacity: isLoading ? 0 : 1,
-                    transition: 'opacity 0.5s ease-out',
+                    opacity: 1,
                     zIndex: 5, // Above spacer, buttons clickable
                     pointerEvents: 'none', // Container doesn't block scroll
                 }}

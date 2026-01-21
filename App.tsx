@@ -14,6 +14,9 @@ import { OrderTracking } from '@/src/components/OrderTracking';
 import { ToastContainer } from '@/src/components/Toast';
 import { CategoryNav, FilterChips } from '@/src/components/CategoryNav';
 import { ProductGridSkeleton } from '@/src/components/Skeleton';
+import { ProductCard } from '@/src/components/ProductCard';
+import { useWishlist } from '@/src/contexts/WishlistContext';
+import { TrendingUp } from 'lucide-react';
 
 // --- Constants & Data ---
 
@@ -150,6 +153,17 @@ const Hero = () => {
           </a>
         </div>
 
+        {/* Trending Badge (Left Side) - Leading to Trending Page */}
+        <div className="absolute bottom-10 left-6 md:bottom-20 md:left-12">
+          <a
+            href="/trending"
+            className="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/10 bg-background-void/60 backdrop-blur-md flex flex-col items-center justify-center text-center group hover:scale-110 transition-transform duration-300 shadow-2xl"
+          >
+            <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-primary mb-1 group-hover:text-foreground transition-colors" />
+            <span className="font-serif text-foreground uppercase text-[8px] md:text-[10px] tracking-widest leading-none">Trending</span>
+          </a>
+        </div>
+
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
           <span className="text-foreground-dim text-xs uppercase tracking-widest mb-2">Scroll</span>
@@ -165,120 +179,7 @@ const Hero = () => {
   );
 };
 
-// Product Card Component - Opens Quick View Modal
-interface ProductCardProps {
-  product: Product;
-  onAddToCart?: (product: Product) => void;
-  onQuickView?: (product: Product) => void;
-}
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onQuickView }) => {
-  const [isAdding, setIsAdding] = useState(false);
-
-  const handleAddToCart = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent opening quick view
-    if (onAddToCart) {
-      setIsAdding(true);
-      onAddToCart(product);
-      setTimeout(() => setIsAdding(false), 500);
-    }
-  };
-
-  const handleCardClick = () => {
-    if (onQuickView) {
-      onQuickView(product);
-    }
-  };
-
-  return (
-    <div
-      className="group relative flex flex-col items-center cursor-pointer"
-      onClick={handleCardClick}
-    >
-      {/* Card Body */}
-      <div className="w-full aspect-[4/5] bg-background-card/20 rounded-[2.5rem] border border-white/5 shadow-xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-gold overflow-hidden relative isolate">
-
-        {/* Image - Fills the card fully */}
-        <img
-          src={product.image}
-          alt={product.name}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-
-        {/* Gradient Overlay for Text Readability - Minimal at bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none z-10"></div>
-
-        {/* Sale/New Badge */}
-        {product.isNew && (
-          <div className="absolute top-4 left-4 z-20 bg-primary text-background-void text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg">
-            New
-          </div>
-        )}
-        {product.originalPrice && (
-          <div className="absolute top-4 right-4 z-20 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-            Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-          </div>
-        )}
-
-        {/* Out of Stock Badge */}
-        {product.inStock === false && (
-          <div className="absolute top-4 left-4 z-20 bg-red-900/80 text-red-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg">
-            Out of Stock
-          </div>
-        )}
-
-        {/* Quick View / Add to Cart Button - Positioned in center, fades in */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-30 bg-black/20 backdrop-blur-[2px]">
-          <div className="flex flex-col gap-2">
-            {/* View Details Button */}
-            <button
-              onClick={handleCardClick}
-              className="px-6 py-3 bg-white/90 text-background-void text-sm font-bold rounded-full hover:bg-white transition-all hover:scale-105 shadow-2xl transform translate-y-4 group-hover:translate-y-0 duration-300"
-            >
-              View Details
-            </button>
-
-            {/* Quick Add Button - Only for in-stock items */}
-            {product.inStock !== false && (
-              <button
-                onClick={handleAddToCart}
-                disabled={isAdding}
-                className="px-6 py-2 bg-primary/90 text-background-void text-xs font-bold rounded-full hover:bg-primary transition-all hover:scale-105 disabled:opacity-50 flex items-center justify-center gap-2 shadow-xl"
-              >
-                {isAdding ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    <span>Adding...</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-3 h-3" />
-                    <span>Quick Add</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Product Name & Price Info - Clean, floating at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 text-center z-20">
-          <h3 className="text-white font-serif text-sm md:text-base font-medium mb-1 drop-shadow-md line-clamp-2">
-            {product.name}
-          </h3>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <div className="px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-2 shadow-lg group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
-              <span className="text-primary-light font-serif text-lg md:text-xl font-bold">GH₵{product.price.toLocaleString()}</span>
-              {product.originalPrice && (
-                <span className="text-white/50 text-xs line-through decoration-white/30">GH₵{product.originalPrice.toLocaleString()}</span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // Shop Section - With API Integration, Quick View, and Filters
 const ShopSection = () => {
@@ -362,6 +263,9 @@ const ShopSection = () => {
   } catch {
     // Toast not available
   }
+
+  // Wishlist Context
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const handleAddToCart = async (product: Product) => {
     if (addToCart) {
@@ -495,13 +399,15 @@ const ShopSection = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 lg:gap-12 px-0 md:px-12">
+            <div className="grid grid-cols-4 lg:grid-cols-4 gap-3 md:gap-8 lg:gap-12 px-0 md:px-12">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   onAddToCart={handleAddToCart}
                   onQuickView={handleQuickView}
+                  onToggleWishlist={toggleWishlist}
+                  isInWishlist={isInWishlist(product.id)}
                 />
               ))}
             </div>
@@ -561,109 +467,7 @@ const ReviewsSection = () => {
   );
 };
 
-const AboutSection = () => {
-  return (
-    <section id="about" className="py-24 relative">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left - Content */}
-          <div className="space-y-6">
-            <h2 className="font-serif text-4xl md:text-5xl text-primary-light">
-              The Ace Story
-            </h2>
-            <div className="space-y-4 text-foreground-muted font-sans leading-relaxed">
-              <p>
-                Ace Wig was born from a simple belief: <strong className="text-foreground">Ghanaian women deserve world-class wigs at prices that don't punish them for wanting to look good.</strong>
-              </p>
-              <p>
-                We started in North Legon with a mission to change the game—no more overpriced imports, no more questionable quality, no more disappointment when the package arrives.
-              </p>
-              <p>
-                Every piece in our collection is hand-selected for quality. We work with <strong className="text-primary">100% virgin hair</strong>, super double drawn for that full, natural flow that lesser wigs can't deliver. And yes—we price it fairly, because accessible luxury isn't a contradiction.
-              </p>
-            </div>
-          </div>
 
-          {/* Right - Info Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-background-card/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
-              <Clock className="w-8 h-8 text-primary mb-3" />
-              <h4 className="text-foreground font-serif text-lg mb-1">Hours</h4>
-              <p className="text-foreground-muted text-sm">Tue – Sat: 9AM – 6PM</p>
-            </div>
-            <div className="bg-background-card/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
-              <Truck className="w-8 h-8 text-primary mb-3" />
-              <h4 className="text-foreground font-serif text-lg mb-1">Delivery</h4>
-              <p className="text-foreground-muted text-sm">2-3 Working Days</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const ServicesSection = () => {
-  const services = [
-    {
-      icon: Scissors,
-      title: 'Custom Styling',
-      description: 'Professional wig customization and styling to match your unique look.',
-    },
-    {
-      icon: Sparkles,
-      title: 'Wig Revamp',
-      description: 'Breathe new life into your existing wigs with our restoration service.',
-    },
-    {
-      icon: Truck,
-      title: 'Fast Delivery',
-      description: 'Nationwide delivery in 2-3 working days. Pickup also available.',
-    },
-  ];
-
-  return (
-    <section
-      id="salon"
-      className="py-24 relative overflow-hidden"
-      style={{
-        backgroundImage: 'url(/service.jpeg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed', // Parallax effect
-      }}
-    >
-      {/* Dark overlay for readability - no blur */}
-      <div className="absolute inset-0 bg-black/60"></div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl text-primary-light mb-4">
-            Salon Services
-          </h2>
-          <p className="text-foreground-muted font-sans max-w-xl mx-auto">
-            We don't just sell wigs—we style them, fit them, and stand behind them. Your confidence is our business.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-black/40 backdrop-blur-md rounded-[2rem] p-8 border border-white/10 text-center hover:bg-black/50 hover:border-primary/30 transition-all duration-300 group"
-            >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                <service.icon className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-serif text-xl text-foreground mb-3">{service.title}</h3>
-              <p className="text-foreground-muted font-sans text-sm">{service.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 
 
@@ -728,9 +532,7 @@ const App = () => {
       {/* All content below hero - scrolls OVER the fixed hero canvas */}
       <div className="relative bg-background" style={{ zIndex: 10 }}>
         <ShopSection />
-        <ServicesSection />
         <ReviewsSection />
-        <AboutSection />
         <Footer />
       </div>
     </div>
