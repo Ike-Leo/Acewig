@@ -18,7 +18,7 @@ const services = [
         description: 'Precision cutting and shaping tailored to your unique facial structure. We craft the perfect silhouette to enhance your natural beauty. Our experts analyze your features to create a look that is uniquely yours.',
         price: 'From GH₵150',
         features: ['Custom cuts & shaping', 'Face-framing layers', 'Bangs/Fringe styling', 'Heat styling finish'],
-        image: '/service.jpeg'
+        image: '/servicepage/Whisk_5e68e786ca9ede095e948967ff3a1f18dr.png'
     },
     {
         icon: Sparkles,
@@ -26,7 +26,7 @@ const services = [
         description: 'Breathe new life into your collection. Our deep conditioning and detangling rituals restore natural luster and softness. We treat every strand with premium products to ensure longevity and shine.',
         price: 'From GH₵200',
         features: ['Deep conditioning spa', 'Expert detangling', 'Color brilliance refresh', 'Lace repair & renewal'],
-        image: '/service.jpeg'
+        image: '/servicepage/Whisk_6d7657d7131f384a7ef40789bea80beadr.png'
     },
     {
         icon: Palette,
@@ -34,7 +34,7 @@ const services = [
         description: 'Expert color alchemy. From subtle sun-kissed highlights to bold, statement-making transformations that turn heads. We use gentle, high-quality dyes to protect integrity while achieving vibrant results.',
         price: 'From GH₵300',
         features: ['Full custom color', 'Dimensional highlights', 'Balayage techniques', 'Color correction'],
-        image: '/service.jpeg'
+        image: '/servicepage/Whisk_807ace6e88513d0bb5641a541976e162eg%20(1).png'
     },
     {
         icon: Heart,
@@ -42,7 +42,7 @@ const services = [
         description: 'The art of the undetectable. Flawless application for a secure, natural finish that boosts your confidence all day. Whether you prefer glueless or adhesive methods, we ensure comfort and style.',
         price: 'From GH₵100',
         features: ['Lace frontal install', 'Closure perfection', 'Glueless methods', 'Maintenance education'],
-        image: '/service.jpeg'
+        image: '/servicepage/Whisk_b153f19a341c338896345070eb268854dr%20(1).png'
     },
     {
         icon: Star,
@@ -50,7 +50,7 @@ const services = [
         description: 'A private session to discover your signature look. We analyze your style, preferences, and lifestyle to find your perfect match. Get expert advice on what textures and lengths suit you best.',
         price: 'Complimentary',
         features: ['Face shape analysis', 'Lifestyle matching', 'Color theory', 'Care guidance'],
-        image: '/service.jpeg'
+        image: '/servicepage/Whisk_f690a792150a212a47e4e6b5c1fccf55dr%20(1).png'
     },
     {
         icon: Truck,
@@ -58,7 +58,8 @@ const services = [
         description: 'Premium logistics. Secure, tracked delivery across Ghana or VIP pickup from our North Legon salon. We ensure your items arrive in pristine condition, ready to wear.',
         price: 'From GH₵30',
         features: ['Same-day local service', 'Nationwide shipping', 'VIP Salon pickup', 'Real-time tracking'],
-        image: '/service.jpeg'
+        image: '/servicepage/Generated%20Image%20January%2021,%202026%20-%203_39AM%20(1).jpg',
+        imageStyle: { backgroundSize: '70% auto', backgroundRepeat: 'no-repeat' }
     },
 ];
 
@@ -116,17 +117,12 @@ const ServiceSection = ({ service, index }: { service: typeof services[0]; index
                 <div className="absolute inset-0 transition-transform duration-700 hover:scale-105">
                     <div
                         className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${service.image})` }}
+                        style={{ backgroundImage: `url('${service.image}')`, ...(service as any).imageStyle }}
                     />
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
                 </div>
 
-                {/* Floating Icon Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-32 h-32 rounded-full border border-white/10 backdrop-blur-sm flex items-center justify-center bg-black/20 group-hover:scale-110 transition-transform duration-500">
-                        <service.icon className="w-12 h-12 text-white/80" />
-                    </div>
-                </div>
+
 
                 {/* Decorative "Gold Box" vibes */}
                 <div className="absolute top-10 right-10 w-20 h-20 border-t border-r border-primary/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -165,8 +161,10 @@ const ServicesPage = () => {
                         style={{ backgroundImage: 'url(/service.jpeg)' }}
                     />
                     {/* Gradient Overlay for Readability & Mood */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-background-void" />
-                    <div className="absolute inset-0 bg-background-void/30 backdrop-blur-[1px]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-background-void" />
+                    {/* Side Fades to focus on middle */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-background-void/90 via-transparent to-background-void/90" />
+                    <div className="absolute inset-0 bg-background-void/10" />
                 </motion.div>
 
                 {/* Hero Content */}

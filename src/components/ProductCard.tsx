@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Loader2 } from 'lucide-react';
+import { ShoppingCart, Loader2, Heart } from 'lucide-react';
 import { Product } from '../types'; // Adjust path as needed, likely ../../types or @/types
 
 interface ProductCardProps {
@@ -75,11 +75,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {onToggleWishlist && (
                     <button
                         onClick={handleWishlistClick}
-                        className={`absolute top-4 ${product.isNew ? 'right-4' : 'left-4'} z-20 p-2 rounded-full backdrop-blur-md transition-all duration-300 ${isInWishlist ? 'bg-primary text-black' : 'bg-black/30 text-white hover:bg-white/20'}`}
+                        className={`absolute top-4 ${product.isNew ? 'right-4' : 'left-4'} z-40 p-2 rounded-full backdrop-blur-md transition-all duration-300 ${isInWishlist ? 'bg-primary text-background-void' : 'bg-black/30 text-white hover:bg-white/20'}`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={isInWishlist ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5 4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                        </svg>
+                        <Heart className="w-4 h-4" fill={isInWishlist ? "currentColor" : "none"} />
                     </button>
                 )}
 

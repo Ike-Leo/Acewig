@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, useInView } from 'framer-motion';
 import { Search, ShoppingCart, Star, MapPin, Phone, Clock, Instagram, MessageCircle, Sparkles, Scissors, Truck, Loader2, Globe, Mail } from 'lucide-react';
 import { Product, Review } from '@/types';
 import { useProducts, useCategories } from '@/src/services/hooks';
@@ -75,11 +77,12 @@ const FALLBACK_PRODUCTS: Product[] = [
 ];
 
 const REVIEWS: Review[] = [
+
   {
     id: 1,
     rating: 5,
     title: 'Won Me for Life',
-    text: "Girl, you're the CHIC! It's so beautiful—you've won me for life. ❤️",
+    text: "Girl, you're the CHIC! It's so beautiful—you've won me for life. 💗",
     author: 'Happy Customer',
     source: 'Instagram DM',
   },
@@ -133,17 +136,17 @@ const Hero = () => {
               </div>
             </div>
 
-            <a
-              href="#shop"
+            <Link
+              to="/contact"
               className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary/10 border border-primary/50 text-primary hover:bg-primary hover:text-background-void transition-all duration-300 uppercase tracking-widest text-xs md:text-sm font-bold"
             >
               Book Appointment
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Shop Now Badge */}
-        <div className="absolute bottom-10 right-6 md:bottom-20 md:right-12">
+        <div className="absolute bottom-24 right-6 md:bottom-56 md:right-12">
           <a
             href="#shop"
             className="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/10 bg-background-void/60 backdrop-blur-md flex flex-col items-center justify-center text-center group hover:scale-110 transition-transform duration-300 shadow-2xl"
@@ -153,15 +156,15 @@ const Hero = () => {
           </a>
         </div>
 
-        {/* Trending Badge (Left Side) - Leading to Trending Page */}
-        <div className="absolute bottom-10 left-6 md:bottom-20 md:left-12">
-          <a
-            href="/trending"
+        {/* Trending Badge (Mobile: Left, Desktop: Right under Shop Now) */}
+        <div className="absolute bottom-24 left-6 md:bottom-24 md:right-12 md:left-auto">
+          <Link
+            to="/trending"
             className="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/10 bg-background-void/60 backdrop-blur-md flex flex-col items-center justify-center text-center group hover:scale-110 transition-transform duration-300 shadow-2xl"
           >
             <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-primary mb-1 group-hover:text-foreground transition-colors" />
             <span className="font-serif text-foreground uppercase text-[8px] md:text-[10px] tracking-widest leading-none">Trending</span>
-          </a>
+          </Link>
         </div>
 
         {/* Scroll indicator */}
@@ -399,7 +402,7 @@ const ShopSection = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-4 lg:grid-cols-4 gap-3 md:gap-8 lg:gap-12 px-0 md:px-12">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 lg:gap-12 px-0 md:px-12">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -431,21 +434,73 @@ const ShopSection = () => {
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
   return (
-    <div className="bg-background-card/50 backdrop-blur-md rounded-[2rem] p-8 md:p-10 border border-white/5 hover:bg-background-wood/50 transition-colors duration-300">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="bg-background-card/50 backdrop-blur-md rounded-[2rem] p-8 md:p-10 border border-white/5 hover:bg-background-wood/50 transition-colors duration-300"
+    >
       <div className="flex space-x-1 mb-4 text-primary">
         {[...Array(review.rating)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-current" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 + (i * 0.1), duration: 0.4 }}
+          >
+            <Star className="w-4 h-4 fill-current" />
+          </motion.div>
         ))}
       </div>
-      <h4 className="text-foreground font-serif text-lg mb-2">{review.title}</h4>
-      <p className="text-foreground-muted font-sans text-sm md:text-base leading-relaxed mb-4">
-        "{review.text}"
-      </p>
-      <div className="flex items-center justify-between text-xs text-foreground-dim">
+      <motion.h4
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+        className="text-foreground font-serif text-lg mb-2"
+      >
+        {review.title}
+      </motion.h4>
+
+      {/* Typewriter Effect for Text */}
+      <div className="min-h-[80px] mb-4">
+        <p className="text-foreground-muted font-sans text-sm md:text-base leading-relaxed inline-block">
+          <span className="sr-only">{review.text}</span>
+          <motion.span
+            initial={{ opacity: 1 }}
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.015 } }
+            }}
+            aria-hidden
+          >
+            {review.text.split('').map((char, index) => (
+              <motion.span
+                key={index}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1 }
+                }}
+                initial="hidden"
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.span>
+        </p>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="flex items-center justify-between text-xs text-foreground-dim"
+      >
         <span>— {review.author}</span>
         <span className="text-primary/70">{review.source}</span>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -453,9 +508,14 @@ const ReviewsSection = () => {
   return (
     <section className="py-24 pb-32 relative">
       <div className="container mx-auto px-6">
-        <h2 className="font-serif text-4xl md:text-5xl text-primary-light text-center mb-16">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="font-serif text-4xl md:text-5xl text-primary-light text-center mb-16"
+        >
           Customer Reviews
-        </h2>
+        </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 px-4 md:px-12">
           {REVIEWS.map((review) => (
@@ -473,47 +533,115 @@ const ReviewsSection = () => {
 
 const Footer = () => {
   return (
-    <footer className="bg-background-void py-12 border-t border-white/5 relative z-20">
+    <footer className="bg-background-void py-16 border-t border-white/10 relative z-20">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
 
-          {/* Brand & Copyright */}
-          <div className="text-center md:text-left">
+          {/* Brand Column */}
+          <div>
             <img
               src="/logo.png"
               alt="AceWig"
-              className="h-10 w-auto mb-4 mx-auto md:mx-0 opacity-80"
+              className="h-12 w-auto mb-4 opacity-90"
               style={{ filter: 'brightness(1.1)' }}
             />
-            <p className="text-foreground-dim text-xs">
-              © {new Date().getFullYear()} Ace Wig & More Ltd. All rights reserved.
+            <p className="text-foreground-muted text-sm leading-relaxed mb-4">
+              Affordable luxury at your fingertips. Premium wigs, professional styling, and personalized service in North Legon.
             </p>
+            {/* Socials */}
+            <div className="flex space-x-4">
+              <a
+                href="https://instagram.com/acewig"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-foreground-muted hover:text-primary hover:bg-primary/10 transition-all"
+                title="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://wa.me/233249494156"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-foreground-muted hover:text-green-500 hover:bg-green-500/10 transition-all"
+                title="WhatsApp"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
-          {/* Socials */}
-          <div className="flex space-x-6">
-            <a
-              href="https://instagram.com/acewig"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground-muted hover:text-primary transition-colors hover:scale-110 transform duration-300"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a
-              href="https://wa.me/233249494156"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground-muted hover:text-green-500 transition-colors hover:scale-110 transform duration-300"
-            >
-              <MessageCircle className="w-5 h-5" />
-            </a>
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-6">Quick Links</h4>
+            <ul className="space-y-3">
+              <li>
+                <a href="/#shop" className="text-foreground-muted hover:text-primary transition-colors text-sm">Shop Wigs</a>
+              </li>
+              <li>
+                <a href="/services" className="text-foreground-muted hover:text-primary transition-colors text-sm">Salon Services</a>
+              </li>
+              <li>
+                <a href="/about" className="text-foreground-muted hover:text-primary transition-colors text-sm">About Ace</a>
+              </li>
+              <li>
+                <a href="/contact" className="text-foreground-muted hover:text-primary transition-colors text-sm">Contact Us</a>
+              </li>
+              <li>
+                <a href="/trending" className="text-foreground-muted hover:text-primary transition-colors text-sm">Trending Now</a>
+              </li>
+            </ul>
           </div>
 
-          {/* Links */}
-          <div className="flex space-x-6 text-xs text-foreground-dim uppercase tracking-wider">
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Terms</a>
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-6">Visit Us</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                <span className="text-foreground-muted">North Legon, Accra, Ghana</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                <span className="text-foreground-muted">Tue – Sat: 9:00 AM – 6:00 PM</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                <a href="tel:+233249494156" className="text-foreground-muted hover:text-primary transition-colors">
+                  +233 249 494 156
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Payment & Delivery */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-6">Payment & Delivery</h4>
+            <ul className="space-y-4 text-sm text-foreground-muted">
+              <li className="flex items-start gap-3">
+                <Globe className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                <span>MTN MoMo Accepted<br /><span className="text-foreground-dim text-xs">Merchant: ACE WIG & MORE LD</span></span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Truck className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                <span>Delivery in 2–3 working days<br /><span className="text-foreground-dim text-xs">Pickup available at salon</span></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-foreground-dim text-xs">
+            © {new Date().getFullYear()} Ace Wig & More Ltd. All rights reserved.
+          </p>
+          <p className="text-foreground-dim text-xs italic">
+            Affordable Luxury at Your Fingertips™
+          </p>
+          <div className="flex space-x-6 text-xs text-foreground-dim">
+            <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
           </div>
         </div>
       </div>

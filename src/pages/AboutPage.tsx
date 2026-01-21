@@ -17,7 +17,7 @@ const contentSections = [
         label: 'Our Origin',
         title: 'Born from a need for Excellence',
         description: 'Ace Wig & More started in North Legon with a simple yet revolutionary belief: Ghanaian women deserve world-class luxury without the heavy markup. We saw a gap between "affordable" and "quality" and decided to bridge it. No more compromising. No more "what I ordered vs what I got". Just pure, unadulterated quality.',
-        image: '/service.jpeg', // Using existing asset as placeholder
+        image: '/aboutpage/111www.png', // Using existing asset as placeholder
         stats: [
             { label: 'Est.', value: '2019' },
             { label: 'Clients', value: '30k+' }
@@ -28,7 +28,8 @@ const contentSections = [
         label: 'Our Standard',
         title: 'The "Super Double Drawn" Promise',
         description: 'Quality is not just a buzzword; it is our baseline. Every strand we sell is 100% virgin hair, rigorously tested. We specialize in Super Double Drawn (SDD) and Raw Vietnamese hair—meaning fullness from root to tip. We reject the "thin ends" industry standard to give you hair that moves, bounces, and commands attention.',
-        image: '/service.jpeg',
+        image: '/aboutpage/33.png',
+        imageStyle: { backgroundSize: '90% auto', backgroundRepeat: 'no-repeat' },
         stats: [
             { label: 'Quality', value: '100%' },
             { label: 'Returns', value: '0%' }
@@ -39,7 +40,7 @@ const contentSections = [
         label: 'Our Philosophy',
         title: 'Community, Not Just Customers',
         description: 'We are more than a shop; we are a styling partner. From our transparent pricing to our personalized consultation, we treat every interaction as a relationship. When you wear Ace, you wear confidence. Our salon services ensure that your investment is maintained, styled, and perfect for every occasion.',
-        image: '/service.jpeg',
+        image: '/aboutpage/22.jpeg',
         stats: [
             { label: 'Followers', value: '36k' },
             { label: 'Rating', value: '5.0' }
@@ -96,17 +97,12 @@ const AboutSection = ({ section, index }: { section: typeof contentSections[0]; 
                 <div className="absolute inset-0 transition-transform duration-700 hover:scale-105">
                     <div
                         className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${section.image})` }}
+                        style={{ backgroundImage: `url(${section.image})`, ...(section as any).imageStyle }}
                     />
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
                 </div>
 
-                {/* Floating Icon Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-32 h-32 rounded-full border border-white/10 backdrop-blur-sm flex items-center justify-center bg-black/20 group-hover:scale-110 transition-transform duration-500">
-                        <section.icon className="w-12 h-12 text-white/80" />
-                    </div>
-                </div>
+
 
                 {/* Decorative "Gold Box" corners */}
                 <div className="absolute top-10 right-10 w-20 h-20 border-t border-r border-primary/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -143,7 +139,8 @@ const AboutPage = () => {
                         style={{ backgroundImage: 'url(/about-page-hero-img.png)' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-background-void" />
-                    <div className="absolute inset-0 bg-background-void/30 backdrop-blur-[1px]" />
+                    {/* Removed blur: <div className="absolute inset-0 bg-background-void/30 backdrop-blur-[1px]" /> */}
+                    <div className="absolute inset-0 bg-background-void/20" /> {/* Just tint, no blur */}
                 </motion.div>
 
                 {/* Hero Content */}

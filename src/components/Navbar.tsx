@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingCart, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Heart, TrendingUp } from 'lucide-react';
 import { NavItem } from '@/types';
 import { useCartContext } from '@/src/contexts/CartContext';
 import { useModal } from '@/src/contexts/AppContext';
 import { SearchBar } from '@/src/components/SearchBar';
+import { useWishlist } from '@/src/contexts/WishlistContext';
 
 const NAV_ITEMS: NavItem[] = [
     { label: 'Home', href: '/' },
+    { label: 'Trending', href: '/trending' },
     { label: 'Shop Wigs', href: '/#shop' },
     { label: 'Salon Services', href: '/services' },
     { label: 'About Ace', href: '/about' },
@@ -21,6 +23,7 @@ export const Navbar = () => {
     // Get cart context and modal controls
     let cartItemCount = 0;
     let openCartDrawer: (() => void) | undefined;
+    let wishlistCount = 0;
 
     try {
         const cartContext = useCartContext();
@@ -34,6 +37,13 @@ export const Navbar = () => {
         openCartDrawer = modalContext.openCart;
     } catch {
         // Modal context not available
+    }
+
+    try {
+        const { wishlistItems } = useWishlist();
+        wishlistCount = wishlistItems.length;
+    } catch {
+        // Wishlist context not available
     }
 
     useEffect(() => {
@@ -59,14 +69,15 @@ export const Navbar = () => {
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
                         {NAV_ITEMS.map((item) => (
                             item.href.startsWith('/') && item.href !== '#shop' && item.href !== '#contact' ? (
                                 <Link
                                     key={item.label}
                                     to={item.href}
-                                    className="text-sm font-sans text-foreground-muted hover:text-primary transition-colors uppercase tracking-wide"
+                                    className="text-sm font-sans text-foreground-muted hover:text-primary transition-colors uppercase tracking-wide flex items-center gap-1"
                                 >
+                                    {item.label === 'Trending' && <TrendingUp className="w-4 h-4" />}
                                     {item.label}
                                 </Link>
                             ) : (
@@ -82,11 +93,25 @@ export const Navbar = () => {
                     </div>
 
                     {/* Icons */}
-                    <div className="flex items-center space-x-4 md:space-x-6">
+                    <div className="flex items-center space-x-3 md:space-x-4">
                         {/* Search Bar - Desktop */}
                         <div className="hidden sm:block">
-                            <SearchBar className="w-48 lg:w-56" placeholder="Search wigs..." />
+                            <SearchBar className="w-40 lg:w-48" placeholder="Search..." />
                         </div>
+
+                        {/* Wishlist Button */}
+                        <Link
+                            to="/wishlist"
+                            className="p-2 text-foreground-muted hover:text-primary transition-colors relative"
+                            title="Wishlist"
+                        >
+                            <Heart className="w-5 h-5" />
+                            {wishlistCount > 0 && (
+                                <span className="absolute top-0 right-0 bg-primary text-background-void text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                    {wishlistCount}
+                                </span>
+                            )}
+                        </Link>
 
                         {/* Cart Button */}
                         <button
@@ -111,7 +136,6 @@ export const Navbar = () => {
                         </button>
                     </div>
                 </div>
-
             </nav>
 
             {/* Mobile Menu - Slides in from RIGHT - Moved outside nav to avoid clipping from backdrop-filter */}

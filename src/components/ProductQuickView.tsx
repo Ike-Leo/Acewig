@@ -408,19 +408,9 @@ export const ProductQuickView: React.FC = () => {
                                 )}
                             </div>
 
-                            {/* Mobile Only: Related Products (Bottom) */}
-                            <div className="md:hidden mt-8 pt-8 border-t border-white/5">
-                                <h3 className="text-sm font-bold uppercase tracking-wider mb-4 text-foreground-muted">You May Also Like</h3>
-                                <RelatedProductsList currentId={product.id} categoryName={product.categoryName} onSelect={handleRelatedSelect} />
-                            </div>
                         </div>
                     </div>
 
-                    {/* RIGHT: Related Products (Desktop: Right Column) */}
-                    <div className="hidden md:flex md:w-3/12 bg-black/20 p-6 flex-col overflow-y-auto border-l border-white/5">
-                        <h3 className="text-sm font-bold uppercase tracking-wider mb-6 text-foreground-muted sticky top-0 bg-[#120f0a] py-2 z-10">You May Also Like</h3>
-                        <RelatedProductsList currentId={product.id} categoryName={product.categoryName} onSelect={handleRelatedSelect} />
-                    </div>
 
                 </div>
             </div>
